@@ -433,7 +433,7 @@ input,select,textarea{font-family:var(--fb)}
         <div class="ph" id="det-header"></div>
         <div class="tabs">
           <button class="tbtn a" onclick="tab(this,'t-ficha')">📋 Ficha</button>
-          <button class="tbtn" onclick="tab(this,'t-treino')">💪 Treino</button>
+          <button class="tbtn" onclick="tab(this,'t-treino)'">💪 Treino</button>
           <button class="tbtn" onclick="tab(this,'t-nut')">🥗 Nutrição</button>
           <button class="tbtn" onclick="tab(this,'t-evo')">📈 Evolução</button>
           <button class="tbtn" onclick="tab(this,'t-med')">📏 Medidas</button>
@@ -697,7 +697,7 @@ input,select,textarea{font-family:var(--fb)}
           </div>
         </div>
         <div class="card" style="max-width:800px;margin-top:.875rem">
-          <div class="ch"><span class="ct">📱 Como instalar no celular (Android & iPhone)</span></div>
+          <div class="ch"><span class="ct">📴 Como instalar no celular (Android & iPhone)</span></div>
           <div class="cb">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.83rem;line-height:1.8">
               <div style="background:var(--card2);border-radius:.6rem;padding:1rem">
@@ -719,6 +719,43 @@ input,select,textarea{font-family:var(--fb)}
             </div>
           </div>
         </div>
+        <div class="card" style="max-width:800px;margin-top:.875rem">
+          <div class="ch">
+            <span class="ct">📋 Importar Alunos — Google Forms</span>
+            <span class="bdg bb" style="font-size:.65rem;margin-left:.5rem">Integração</span>
+          </div>
+          <div class="cb">
+            <div style="background:linear-gradient(135deg,#001a2a,#003050);border:1px solid rgba(100,181,246,.2);border-radius:.65rem;padding:1rem;margin-bottom:.875rem">
+              <div style="font-size:.72rem;color:#64b5f6;font-weight:700;letter-spacing:.08em;margin-bottom:.4rem">COMO FUNCIONA</div>
+              <div style="font-size:.82rem;color:var(--white);line-height:1.8">
+                1. Você cria um Google Form e compartilha o link com seus alunos via WhatsApp<br>
+                2. O aluno preenche — os dados chegam automaticamente no seu Google Sheets<br>
+                3. Você clica em "Buscar Cadastros" aqui e os alunos novos aparecem para importar
+              </div>
+            </div>
+            <div class="fg"><label>URL do Google Apps Script (cole aqui após seguir o guia)</label>
+              <input id="gcfg-url" placeholder="https://script.google.com/macros/s/.../exec" style="font-size:.78rem">
+            </div>
+            <div class="fr" style="align-items:flex-end">
+              <div class="fg"><label>Chave Secreta</label>
+                <input id="gcfg-key" type="password" placeholder="Ex: EliteJapan2024">
+              </div>
+              <div class="fg">
+                <button class="sb" onclick="saveGoogleCfg()" style="width:100%">💾 Salvar Config</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:center;margin-bottom:.875rem;flex-wrap:wrap">
+              <button class="sb" onclick="fetchFromGoogle()" style="background:linear-gradient(135deg,#001a2a,#003a6a);color:#64b5f6;border:1px solid rgba(100,181,246,.3)">🔄 Buscar Novos Cadastros</button>
+              <span id="gcfg-status" style="font-size:.78rem;color:var(--muted)"></span>
+            </div>
+            <div id="import-preview" style="display:none">
+              <div style="font-size:.8rem;font-weight:600;color:var(--gold);margin-bottom:.6rem;font-family:var(--fh)">Cadastros pendentes de importação:</div>
+              <div id="import-list"></div>
+              <button class="sb full" onclick="importSelected()" style="margin-top:.875rem">✅ Importar Selecionados para o App</button>
+            </div>
+            <div id="import-empty" style="display:none;text-align:center;padding:1rem;font-size:.82rem;color:var(--muted)">🎉 Nenhum cadastro novo — tudo já importado!</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -727,7 +764,7 @@ input,select,textarea{font-family:var(--fb)}
 
 <!-- ── BOTTOM NAV (mobile) ── -->
 <div id="bnav">
-  <div class="bni a" onclick="go('dashboard')"><span class="ico">📊</span>Home</div>
+  <div class="bni a" onclick="go('dashboard')"><span class="ico">🍊</span>Home</div>
   <div class="bni" onclick="go('students')"><span class="ico">👥</span>Alunos</div>
   <div class="bni" onclick="go('workouts')"><span class="ico">💪</span>Treinos</div>
   <div class="bni" onclick="go('evolution')"><span class="ico">📈</span>Evolução</div>
@@ -1122,7 +1159,7 @@ function renderWTable(di){
   if(lbl) lbl.textContent=d.l+' — '+d.s;
   const t=document.getElementById('wtable');
   if(!t) return;
-  if(!d.ex.length){t.innerHTML=`<tbody><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">😴 Dia de descanso — recuperação ativa</td></tr></tbody>`;return}
+  if(!d.ex.length){t.innerHTML<`<tbody><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">😴 Dia de descanso — recuperação ativa</td></tr></tbody>`;return}
   t.innerHTML=`<thead><tr><th>#</th><th>Exercício</th><th>Grupo</th><th>Séries</th><th>Reps</th><th>Carga</th><th>Descanso</th></tr></thead><tbody>
     ${d.ex.map((e,i)=>`<tr onclick="om(${di},${i})"><td><span class="en">${i+1}</span></td><td style="font-weight:600">${e.n}</td><td><span class="mt">${e.m}</span></td><td style="font-family:var(--fh);font-weight:700;color:var(--gold)">${e.sr}</td><td>${e.rp}</td><td style="font-weight:600">${e.ld}</td><td style="color:var(--muted)">${e.rs}</td></tr>`).join('')}
   </tbody>`;
@@ -1243,7 +1280,7 @@ function initEvoCharts(){
 // ════════════════════════════════════════
 const defOpts={
   responsive:true,maintainAspectRatio:false,
-  plugins:{legend:{labels:{color:'#888',font:{family:'Poppins',size:10}}},tooltip:{backgroundColor:'#1a1a1a',titleColor:'#C9A84C',bodyColor:'#F0F0F0',borderColor:'#252525',borderWidth:1}},
+  plugins:{legend:{labels:{color:'#888',font:{ramily:'Poppins',size:10}}},tooltip:{backgroundColor:'#1a1a1a',titleColor:'#C9A84C',bodyColor:'#F0F0F0',borderColor:'#252525',borderWidth:1}},
   scales:{x:{ticks:{color:'#555',font:{size:9}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#555',font:{size:9}},grid:{color:'rgba(255,255,255,.03)'}}}
 };
 function mkChart(id,type,data,extra={}){
@@ -1282,6 +1319,7 @@ function loadSettings(){
   const cnt=S.getStudents().length;
   const el=document.getElementById('cfg-count');
   if(el) el.textContent=cnt;
+  loadGoogleCfg();
 }
 function saveCfg(){
   const cfg={name:document.getElementById('cfg-name').value||'Personal Trainer',spec:document.getElementById('cfg-spec').value,phone:document.getElementById('cfg-phone').value};
@@ -1292,6 +1330,126 @@ function saveCfg(){
   toast('✅ Perfil salvo!');
 }
 function clearAll(){localStorage.clear();toast('🗑 Dados apagados. Recarregando...');setTimeout(()=>location.reload(),1000)}
+
+// ════════════════════════════════════════
+//  GOOGLE FORMS IMPORT
+// ════════════════════════════════════════
+function loadGoogleCfg(){
+  const cfg=S.get('gcfg')||{};
+  const urlEl=document.getElementById('gcfg-url');
+  const keyEl=document.getElementById('gcfg-key');
+  if(urlEl) urlEl.value=cfg.url||'';
+  if(keyEl) keyEl.value=cfg.key||'';
+}
+
+function saveGoogleCfg(){
+  const url=(document.getElementById('gcfg-url').value||'').trim();
+  const key=(document.getElementById('gcfg-key').value||'').trim();
+  if(!url){toast('❌ Cole a URL do Apps Script');return}
+  if(!key){toast('❌ Digite a chave secreta');return}
+  S.set('gcfg',{url,key});
+  toast('✅ Configuração salva!');
+}
+
+function fetchFromGoogle(){
+  const cfg=S.get('gcfg')||{};
+  if(!cfg.url||!cfg.key){
+    toast('⚠️ Configure a URL e chave primeiro');
+    document.getElementById('gcfg-status').textContent='⚠️ Preencha a URL e Chave Secreta antes';
+    return;
+  }
+  const status=document.getElementById('gcfg-status');
+  status.textContent='⏳ Buscando cadastros...';
+  document.getElementById('import-preview').style.display='none';
+  document.getElementById('import-empty').style.display='none';
+
+  fetch(cfg.url+'?key='+encodeURIComponent(cfg.key))
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+    .then(data=>{
+      if(data.error){status.textContent='❌ '+data.error;return}
+      const all=data.students||[];
+      const existingEmails=S.getStudents().map(s=>(s.email||'').toLowerCase().trim());
+      const imported=S.get('imported_emails')||[];
+      const pending=all.filter(s=>{
+        const em=(s['E-mail']||s['Email']||s['email']||'').toLowerCase().trim();
+        return em?(!existingEmails.includes(em)&&!imported.includes(em)):true;
+      });
+      if(!pending.length){
+        status.textContent='🎉 Nenhum cadastro novo';
+        document.getElementById('import-empty').style.display='block';
+        return;
+      }
+      status.textContent=pending.length+' novo(s) encontrado(s)';
+      renderImportPreview(pending);
+    })
+    .catch(err=>{
+      status.textContent='❌ Erro de conexão. Verifique a URL.';
+      console.error('Google import error:',err);
+    });
+}
+
+function renderImportPreview(students){
+  const preview=document.getElementById('import-preview');
+  const list=document.getElementById('import-list');
+  preview.style.display='block';
+  window._pendingImport=students;
+  list.innerHTML=students.map((s,i)=>{
+    const name=s['Nome Completo']||s['Nome']||s['name']||'Sem nome';
+    const email=s['E-mail']||s['Email']||s['email']||'';
+    const phone=s['Telefone / WhatsApp']||s['Telefone']||s['phone']||'';
+    const goal=s['Objetivo Principal']||s['Objetivo']||s['goal']||'';
+    const freq=s['Frequência de Treino']||s['Frequência']||s['freq']||'';
+    return `<div style="background:var(--card2);border-radius:.55rem;padding:.75rem;margin-bottom:.45rem;display:flex;align-items:center;gap:.75rem">
+      <input type="checkbox" id="imp-${i}" checked style="width:16px;height:16px;accent-color:var(--gold);flex-shrink:0">
+      <label for="imp-${i}" style="flex:1;cursor:pointer">
+        <div style="font-weight:600;font-size:.88rem">${name}</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">${email}${phone?' · '+phone:''}</div>
+        ${goal?`<div style="font-size:.7rem;color:var(--gold);margin-top:.1rem">${goal}${freq?' · '+freq:''}</div>`:''}
+      </label>
+    </div>`;
+  }).join('');
+}
+
+function importSelected(){
+  const students=window._pendingImport||[];
+  if(!students.length){toast('Nenhum aluno para importar');return}
+  const ss=S.getStudents();
+  const imported=S.get('imported_emails')||[];
+  let count=0;
+  students.forEach((s,i)=>{
+    const cb=document.getElementById('imp-'+i);
+    if(!cb||!cb.checked) return;
+    const email=(s['E-mail']||s['Email']||s['email']||'').toLowerCase().trim();
+    const newS={
+      id:Date.now()+i,
+      name:s['Nome Completo']||s['Nome']||s['name']||'Sem nome',
+      email:s['E-mail']||s['Email']||s['email']||'',
+      phone:s['Telefone / WhatsApp']||s['Telefone']||s['phone']||'',
+      age:s['Idade']||s['age']||'',
+      weight:s['Peso Atual (kg)']||s['Peso']||s['weight']||'',
+      height:s['Altura (m)']||s['Altura']||s['height']||'',
+      goal:s['Objetivo Principal']||s['Objetivo']||s['goal']||'Hipertrofia',
+      freq:s['Frequência de Treino']||s['Frequência']||s['freq']||'3x semana',
+      health:s['Restrições de Saúde']||s['health']||'',
+      food:s['Restrições Alimentares']||s['food']||'',
+      notes:s['Observações']||s['notes']||'',
+      fat:'',status:'active',progress:0,
+      createdAt:new Date().toLocaleDateString('pt-BR'),
+      measures:{}
+    };
+    ss.push(newS);
+    if(email) imported.push(email);
+    count++;
+  });
+  S.setStudents(ss);
+  S.set('imported_emails',imported);
+  S.addActivity({msg:`${count} aluno(s) importado(s) via Google Forms`});
+  document.getElementById('import-preview').style.display='none';
+  document.getElementById('gcfg-status').textContent=`✅ ${count} aluno(s) importado(s) com sucesso!`;
+  window._pendingImport=[];
+  updateBadge();
+  toast(`✅ ${count} aluno(s) importado(s)!`);
+}
 
 // ════════════════════════════════════════
 //  UTILITIES
