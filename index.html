@@ -68,7 +68,7 @@ input,select,textarea{font-family:var(--fb)}
 #mn{flex:1;overflow-y:auto;background:var(--black)}
 .tb{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:.5rem}
 .tbt{font-family:var(--fh);font-size:1rem;font-weight:700}
-.tas{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.tas{display:flex;align-items:center;gap:.5rem;flew-wrap:wrap}
 .btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:.4rem;font-size:.78rem;cursor:pointer;transition:all .2s}
 .btn:hover{border-color:var(--gold);color:var(--gold)}
 .btn.g{background:linear-gradient(135deg,var(--gold3),var(--gold));color:#000;font-weight:700;border:none}
@@ -242,6 +242,33 @@ input,select,textarea{font-family:var(--fb)}
   .sg{grid-template-columns:1fr 1fr}
   .msg{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ─── WORKOUT / DIET EDITOR ─── */
+.ex-row{display:grid;grid-template-columns:1fr 60px 80px 80px 80px 90px 34px;gap:.4rem;align-items:center;margin-bottom:.35rem}
+.ex-row input{background:#111;border:1px solid var(--border);border-radius:.35rem;padding:.4rem .5rem;color:var(--white);font-size:.78rem;width:100%}
+.ex-row input:focus{outline:none;border-color:var(--gold)}
+.del-btn{background:none;border:none;color:var(--red);font-size:1.1rem;cursor:pointer;padding:0;opacity:.7;flex-shrink:0}
+.del-btn:hover{opacity:1}
+.day-block{background:var(--card2);border-radius:.65rem;padding:.875rem;margin-bottom:.75rem}
+.day-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem;flex-wrap:wrap;gap:.5rem}
+.add-ex-btn{background:none;border:1px dashed var(--border);color:var(--muted);border-radius:.35rem;padding:.35rem .75rem;font-size:.75rem;cursor:pointer;transition:all .2s}
+.add-ex-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ex-note-row{margin-bottom:.55rem}
+.ex-note-row input{background:#111;border:1px solid var(--border);border-radius:.35rem;padding:.38rem .6rem;color:var(--white);font-size:.74rem;width:calc(100% - 38px)}
+.ex-note-row input:focus{outline:none;border-color:var(--gold3)}
+.ex-hdr-row{display:grid;grid-template-columns:1fr 60px 80px 80px 80px 90px 34px;gap:.4rem;margin-bottom:.25rem}
+.ex-hdr-row span{font-size:.66rem;color:var(--muted);text-align:center}
+.meal-row{display:grid;grid-template-columns:80px 150px 1fr 80px 34px;gap:.4rem;align-items:center;margin-bottom:.45rem}
+.meal-row input{background:#111;border:1px solid var(--border);border-radius:.35rem;padding:.4rem .5rem;color:var(--white);font-size:.78rem;width:100%}
+.meal-row input:focus{outline:none;border-color:var(--gold)}
+.edit-section{background:var(--card2);border-radius:.65rem;padding:1.1rem;margin-bottom:.875rem}
+.macro-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.65rem;margin-bottom:.875rem}
+.macro-input{background:#111;border:1px solid var(--border);border-radius:.5rem;padding:.65rem .75rem;color:var(--white);font-size:.92rem;text-align:center;font-family:var(--fh);font-weight:700;width:100%}
+.macro-input:focus{outline:none;border-color:var(--gold)}
+.macro-lbl{font-size:.68rem;color:var(--muted);text-align:center;margin-top:.3rem}
+.empty-plan{text-align:center;padding:2.5rem 1rem}
+.empty-plan .eico{font-size:2.5rem;margin-bottom:.75rem}
+.empty-plan p{font-size:.82rem;color:var(--muted);margin-bottom:1rem}
 </style>
 </head>
 <body>
@@ -433,7 +460,7 @@ input,select,textarea{font-family:var(--fb)}
         <div class="ph" id="det-header"></div>
         <div class="tabs">
           <button class="tbtn a" onclick="tab(this,'t-ficha')">📋 Ficha</button>
-          <button class="tbtn" onclick="tab(this,'t-treino)'">💪 Treino</button>
+          <button class="tbtn" onclick="tab(this,'t-treino')">💪 Treino</button>
           <button class="tbtn" onclick="tab(this,'t-nut')">🥗 Nutrição</button>
           <button class="tbtn" onclick="tab(this,'t-evo')">📈 Evolução</button>
           <button class="tbtn" onclick="tab(this,'t-med')">📏 Medidas</button>
@@ -458,45 +485,12 @@ input,select,textarea{font-family:var(--fb)}
 
         <!-- TREINO -->
         <div class="tc" id="t-treino">
-          <div style="margin-bottom:.875rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
-            <div><div style="font-size:.88rem;font-weight:600">Plano de Treino <span class="g" id="wplan-label"></span></div><div style="font-size:.72rem;color:var(--muted)">Clique em um exercício para ver detalhes de execução</div></div>
-          </div>
-          <div style="display:flex;gap:.4rem;margin-bottom:.875rem;flex-wrap:wrap" id="wday-tabs"></div>
-          <div class="card">
-            <div class="ch"><span class="ct" id="wday-label">Treino</span></div>
-            <div class="cb" style="padding:0;overflow-x:auto"><table class="wt" id="wtable" style="min-width:520px"></table></div>
-          </div>
+          <div id="treino-view"></div>
         </div>
 
         <!-- NUTRIÇÃO -->
         <div class="tc" id="t-nut">
-          <div style="display:grid;grid-template-columns:200px 1fr;gap:.875rem">
-            <div>
-              <div class="card" style="margin-bottom:.875rem">
-                <div class="ch"><span class="ct">Macros/Dia</span></div>
-                <div class="cb">
-                  <div style="text-align:center;margin-bottom:.875rem">
-                    <div style="font-family:var(--fh);font-size:1.8rem;font-weight:800;color:var(--gold)" id="n-kcal">2850</div>
-                    <div style="font-size:.7rem;color:var(--muted)">kcal / dia</div>
-                  </div>
-                  <div class="mc" style="margin-bottom:.4rem"><div class="mn">Proteína</div><div class="mv" style="color:#ef9a9a" id="n-prot">220g</div><div class="mw"><div class="mf" style="width:70%;background:#ef9a9a"></div></div></div>
-                  <div class="mc" style="margin-bottom:.4rem"><div class="mn">Carboidrato</div><div class="mv" style="color:#ffcc80" id="n-carb">320g</div><div class="mw"><div class="mf" style="width:80%;background:#ffcc80"></div></div></div>
-                  <div class="mc"><div class="mn">Gordura</div><div class="mv" style="color:#a5d6a7" id="n-fat">70g</div><div class="mw"><div class="mf" style="width:40%;background:#a5d6a7"></div></div></div>
-                </div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="ch"><span class="ct">Plano Alimentar</span></div>
-              <div class="cb">
-                <div class="meal"><div class="mh">07:00</div><div class="mi"><h4>Café da Manhã</h4><p>4 ovos mexidos · 2 fatias de pão integral · 1 banana · Café preto sem açúcar</p></div><div class="mk">520 kcal</div></div>
-                <div class="meal"><div class="mh">10:00</div><div class="mi"><h4>Lanche 1</h4><p>200g frango grelhado · 1 batata-doce média · Salada verde com azeite</p></div><div class="mk">480 kcal</div></div>
-                <div class="meal"><div class="mh">13:00</div><div class="mi"><h4>Almoço</h4><p>200g carne vermelha magra · 100g arroz integral · Feijão · Legumes</p></div><div class="mk">650 kcal</div></div>
-                <div class="meal"><div class="mh">16:00</div><div class="mi"><h4>Pré-Treino</h4><p>200g iogurte grego · 30g aveia · 1 maçã · Creatina 5g</p></div><div class="mk">380 kcal</div></div>
-                <div class="meal"><div class="mh">19:00</div><div class="mi"><h4>Pós-Treino</h4><p>Whey Protein 40g · 1 banana · 30g maltodextrina</p></div><div class="mk">320 kcal</div></div>
-                <div class="meal"><div class="mh">21:30</div><div class="mi"><h4>Jantar</h4><p>200g tilápia assada · Quinoa · Aspargos · Azeite extravirgem</p></div><div class="mk">500 kcal</div></div>
-              </div>
-            </div>
-          </div>
+          <div id="nut-view"></div>
         </div>
 
         <!-- EVOLUÇÃO -->
@@ -697,7 +691,7 @@ input,select,textarea{font-family:var(--fb)}
           </div>
         </div>
         <div class="card" style="max-width:800px;margin-top:.875rem">
-          <div class="ch"><span class="ct">📴 Como instalar no celular (Android & iPhone)</span></div>
+          <div class="ch"><span class="ct">📱 Como instalar no celular (Android & iPhone)</span></div>
           <div class="cb">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.83rem;line-height:1.8">
               <div style="background:var(--card2);border-radius:.6rem;padding:1rem">
@@ -729,7 +723,7 @@ input,select,textarea{font-family:var(--fb)}
               <div style="font-size:.72rem;color:#64b5f6;font-weight:700;letter-spacing:.08em;margin-bottom:.4rem">COMO FUNCIONA</div>
               <div style="font-size:.82rem;color:var(--white);line-height:1.8">
                 1. Você cria um Google Form e compartilha o link com seus alunos via WhatsApp<br>
-                2. O aluno preenche — os dados chegam automaticamente no seu Google Sheets<br>
+                2. O aluno preenche — Os dados chegam automaticamente no seu Google Sheets<br>
                 3. Você clica em "Buscar Cadastros" aqui e os alunos novos aparecem para importar
               </div>
             </div>
@@ -764,7 +758,7 @@ input,select,textarea{font-family:var(--fb)}
 
 <!-- ── BOTTOM NAV (mobile) ── -->
 <div id="bnav">
-  <div class="bni a" onclick="go('dashboard')"><span class="ico">🍊</span>Home</div>
+  <div class="bni a" onclick="go('dashboard')"><span class="ico">📊</span>Home</div>
   <div class="bni" onclick="go('students')"><span class="ico">👥</span>Alunos</div>
   <div class="bni" onclick="go('workouts')"><span class="ico">💪</span>Treinos</div>
   <div class="bni" onclick="go('evolution')"><span class="ico">📈</span>Evolução</div>
@@ -813,7 +807,11 @@ const S={
   getCfg(){return this.get('cfg')||{name:'Personal Trainer',spec:'',phone:''}},
   setCfg(c){this.set('cfg',c)},
   getActivity(){return this.get('activity')||[]},
-  addActivity(a){const ac=this.getActivity();ac.unshift({...a,time:new Date().toLocaleString('pt-BR',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'})});this.set('activity',ac.slice(0,20))}
+  addActivity(a){const ac=this.getActivity();ac.unshift({...a,time:new Date().toLocaleString('pt-BR',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'})});this.set('activity',ac.slice(0,20))},
+  getWorkout(id){return this.get('workout_'+id)||null},
+  setWorkout(id,w){this.set('workout_'+id,w)},
+  getDiet(id){return this.get('diet_'+id)||null},
+  setDiet(id,d){this.set('diet_'+id,d)}
 };
 
 // ════════════════════════════════════════
@@ -897,6 +895,8 @@ function tab(btn,id){
   const t=document.getElementById(id);if(t)t.classList.add('a');
   if(id==='t-evo')setTimeout(()=>initStudentCharts(),120);
   if(id==='t-med')initMeasureForm();
+  if(id==='t-treino')renderCustomWorkout();
+  if(id==='t-nut')renderCustomDiet();
 }
 
 // ════════════════════════════════════════
@@ -1123,17 +1123,8 @@ function loadDetail(idx){
     <div class="msc"><div class="msn">Braço</div><div class="msv">${latest.arm||m.arm||'—'}<span style="font-size:.75rem;color:var(--muted)">cm</span></div></div>
     <div class="msc"><div class="msn">Coxa</div><div class="msv">${latest.thigh||m.thigh||'—'}<span style="font-size:.75rem;color:var(--muted)">cm</span></div></div>`;
 
-  // Workout
-  const gobj=s.goal||'Hipertrofia';
-  document.getElementById('wplan-label').textContent=gobj+' · 5x semana';
-  renderWDayTabs();
-  renderWTable(0);
-
-  // Nutrition macros based on goal
-  if(gobj.includes('Emagrec')){document.getElementById('n-kcal').textContent='1800';document.getElementById('n-prot').textContent='180g';document.getElementById('n-carb').textContent='160g';document.getElementById('n-fat').textContent='55g'}
-  else{document.getElementById('n-kcal').textContent='2850';document.getElementById('n-prot').textContent='220g';document.getElementById('n-carb').textContent='320g';document.getElementById('n-fat').textContent='70g'}
-
-  // Measure history
+  // Custom workout & diet (rendered on demand when tab is clicked)
+  // Pre-render for the default active tab (Ficha)
   renderMeasureHistory();
 }
 
@@ -1280,7 +1271,7 @@ function initEvoCharts(){
 // ════════════════════════════════════════
 const defOpts={
   responsive:true,maintainAspectRatio:false,
-  plugins:{legend:{labels:{color:'#888',font:{ramily:'Poppins',size:10}}},tooltip:{backgroundColor:'#1a1a1a',titleColor:'#C9A84C',bodyColor:'#F0F0F0',borderColor:'#252525',borderWidth:1}},
+  plugins:{legend:{labels:{color:'#888',font:{family:'Poppins',size:10}}},tooltip:{backgroundColor:'#1a1a1a',titleColor:'#C9A84C',bodyColor:'#F0F0F0',borderColor:'#252525',borderWidth:1}},
   scales:{x:{ticks:{color:'#555',font:{size:9}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#555',font:{size:9}},grid:{color:'rgba(255,255,255,.03)'}}}
 };
 function mkChart(id,type,data,extra={}){
@@ -1449,6 +1440,247 @@ function importSelected(){
   window._pendingImport=[];
   updateBadge();
   toast(`✅ ${count} aluno(s) importado(s)!`);
+}
+
+// ════════════════════════════════════════
+//  CUSTOM WORKOUT EDITOR
+// ════════════════════════════════════════
+let _cwPlan=null,_cwDay=0;
+
+function renderCustomWorkout(){
+  const c=document.getElementById('treino-view');
+  if(!c||curStudent===null)return;
+  const ss=S.getStudents();const s=ss[curStudent];if(!s)return;
+  const plan=S.getWorkout(s.id);
+  if(!plan){
+    c.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.875rem">
+      <div><div style="font-size:.88rem;font-weight:600">Treino de <span class="g">${s.name.split(' ')[0]}</span></div><div style="font-size:.72rem;color:var(--muted)">Objetivo: ${s.goal} · ${s.freq}</div></div>
+      <button class="btn g" onclick="startEditWorkout()">✏️ Montar Treino</button></div>
+      <div class="card"><div class="cb empty-plan"><div class="eico">💪</div><p>Nenhum treino montado ainda.<br>Clique em <strong style="color:var(--gold)">Montar Treino</strong> para criar o plano personalizado deste aluno.</p></div></div>`;
+    return;
+  }
+  const dayBtns=plan.days.map((d,i)=>`<button onclick="showCWDay(${i})" id="cwd-${i}" style="padding:.38rem .75rem;border-radius:.38rem;font-size:.75rem;cursor:pointer;font-family:var(--fh);transition:all .2s;${i===0?'background:linear-gradient(135deg,#1a1200,#2a1e00);color:var(--gold);font-weight:600;border:none':'background:var(--card2);color:var(--muted);border:1px solid var(--border)'}">${d.label}</button>`).join('');
+  c.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.875rem">
+    <div><div style="font-size:.88rem;font-weight:600">Treino de <span class="g">${s.name.split(' ')[0]}</span></div><div style="font-size:.72rem;color:var(--muted)">Clique num exercício para ver detalhes</div></div>
+    <button class="btn g" onclick="startEditWorkout()">✏️ Editar Treino</button></div>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.875rem">${dayBtns}</div>
+    <div class="card" id="cwd-card"><div class="ch"><span class="ct" id="cwd-label">${plan.days[0].label} — ${plan.days[0].name||'Descanso'}</span></div>
+    <div class="cb" style="padding:0;overflow-x:auto"><table class="wt" id="cwtable" style="min-width:480px"></table></div></div>`;
+  showCWDay(0);
+}
+
+function showCWDay(i){
+  const ss=S.getStudents();const s=ss[curStudent];
+  const plan=S.getWorkout(s.id);if(!plan)return;
+  _cwDay=i;
+  plan.days.forEach((_,j)=>{
+    const b=document.getElementById('cwd-'+j);if(!b)return;
+    b.style.cssText=j===i?'padding:.38rem .75rem;border-radius:.38rem;font-size:.75rem;cursor:pointer;font-family:var(--fh);transition:all .2s;background:linear-gradient(135deg,#1a1200,#2a1e00);color:var(--gold);font-weight:600;border:none':'padding:.38rem .75rem;border-radius:.38rem;font-size:.75rem;cursor:pointer;font-family:var(--fh);transition:all .2s;background:var(--card2);color:var(--muted);border:1px solid var(--border)';
+  });
+  const d=plan.days[i];
+  const lbl=document.getElementById('cwd-label');if(lbl)lbl.textContent=d.label+' — '+(d.name||'Descanso');
+  const t=document.getElementById('cwtable');if(!t)return;
+  if(!d.exercises||!d.exercises.length){t.innerHTML=`<tbody><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">😴 Dia de descanso — sem exercícios cadastrados</td></tr></tbody>`;return}
+  t.innerHTML=`<thead><tr><th>#</th><th>Exercício</th><th>Grupo</th><th>Séries</th><th>Reps</th><th>Carga</th><th>Descanso</th></tr></thead><tbody>${d.exercises.map((e,j)=>`<tr onclick="showExDetail(${JSON.stringify(e.name)},${JSON.stringify(e.muscle||'')},${JSON.stringify(e.sets||'')},${JSON.stringify(e.reps||'')},${JSON.stringify(e.load||'')},${JSON.stringify(e.rest||'')},${JSON.stringify(e.notes||'')})" style="cursor:pointer"><td><span class="en">${j+1}</span></td><td style="font-weight:600">${e.name}</td><td><span class="mt">${e.muscle||'—'}</span></td><td style="font-family:var(--fh);font-weight:700;color:var(--gold)">${e.sets||'—'}</td><td>${e.reps||'—'}</td><td style="font-weight:600">${e.load||'—'}</td><td style="color:var(--muted)">${e.rest||'—'}</td></tr>`).join('')}</tbody>`;
+}
+
+function showExDetail(name,muscle,sets,reps,load,rest,notes){
+  document.getElementById('m-name').textContent=name;
+  document.getElementById('m-em').textContent='🏋️';
+  document.getElementById('m-ser').textContent=sets||'—';
+  document.getElementById('m-rep').textContent=reps||'—';
+  document.getElementById('m-ld').textContent=load||'—';
+  document.getElementById('m-rs').textContent=rest||'—';
+  document.getElementById('m-ms').textContent=muscle||'—';
+  document.getElementById('m-cd').textContent='2-1-2';
+  document.getElementById('m-notes').textContent=notes||'Execute com amplitude completa e controle total do movimento.';
+  document.getElementById('mo').classList.remove('h');
+}
+
+function startEditWorkout(){
+  const ss=S.getStudents();const s=ss[curStudent];
+  let plan=S.getWorkout(s.id);
+  if(!plan){
+    plan={days:[
+      {label:'Seg',name:'',exercises:[]},{label:'Ter',name:'',exercises:[]},
+      {label:'Qua',name:'Descanso',exercises:[]},{label:'Qui',name:'',exercises:[]},
+      {label:'Sex',name:'',exercises:[]},{label:'Sáb',name:'',exercises:[]},
+      {label:'Dom',name:'Descanso',exercises:[]}
+    ]};
+  }
+  _cwPlan=JSON.parse(JSON.stringify(plan));
+  renderWorkoutEditor();
+}
+
+function renderWorkoutEditor(){
+  const c=document.getElementById('treino-view');
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+    <div style="font-family:var(--fh);font-size:.92rem;font-weight:700;color:var(--gold)">✏️ Editor de Treino Personalizado</div>
+    <div style="display:flex;gap:.5rem"><button class="btn" onclick="renderCustomWorkout()">✕ Cancelar</button>
+    <button class="btn g" onclick="saveWorkoutPlan()">💾 Salvar Treino</button></div></div>
+  <div style="font-size:.75rem;color:var(--muted);margin-bottom:.875rem;background:var(--card2);padding:.6rem .875rem;border-radius:.5rem">
+    💡 Preencha o nome do treino e adicione os exercícios para cada dia. Campos: Exercício · Séries · Reps · Carga · Descanso · Grupo Muscular</div>`;
+  _cwPlan.days.forEach((day,di)=>{
+    html+=`<div class="day-block"><div class="day-hdr">
+      <div style="display:flex;align-items:center;gap:.65rem;flex-wrap:wrap">
+        <span style="font-family:var(--fh);font-size:.82rem;font-weight:800;color:var(--gold);min-width:28px">${day.label}</span>
+        <input value="${day.name||''}" onchange="_cwPlan.days[${di}].name=this.value" placeholder="Nome do treino (ex: Peito & Tríceps)" style="background:#111;border:1px solid var(--border);border-radius:.35rem;padding:.4rem .7rem;color:var(--white);font-size:.8rem;min-width:200px;flex:1">
+      </div>
+      <button class="add-ex-btn" onclick="addExToPlan(${di})">+ Exercício</button></div>`;
+    if(day.exercises.length){
+      html+=`<div class="ex-hdr-row"><span style="text-align:left">Exercício *</span><span>Séries</span><span>Reps</span><span>Carga</span><span>Descanso</span><span>Músculo</span><span></span></div>`;
+      day.exercises.forEach((ex,ei)=>{
+        html+=`<div class="ex-row">
+          <input value="${ex.name||''}" onchange="_cwPlan.days[${di}].exercises[${ei}].name=this.value" placeholder="Nome do exercício *">
+          <input value="${ex.sets||''}" onchange="_cwPlan.days[${di}].exercises[${ei}].sets=this.value" placeholder="4">
+          <input value="${ex.reps||''}" onchange="_cwPlan.days[${di}].exercises[${ei}].reps=this.value" placeholder="10-12">
+          <input value="${ex.load||''}" onchange="_cwPlan.days[${di}].exercises[${ei}].load=this.value" placeholder="80kg">
+          <input value="${ex.rest||''}" onchange="_cwPlan.days[${di}].exercises[${ei}].rest=this.value" placeholder="60s">
+          <input value="${ex.muscle||''}" onchange="_cwPlan.days[${di}].exercises[${ei}].muscle=this.value" placeholder="Peitoral">
+          <button class="del-btn" onclick="deleteExFromPlan(${di},${ei})">🗑</button></div>
+        <div class="ex-note-row"><input value="${ex.notes||''}" onchange="_cwPlan.days[${di}].exercises[${ei}].notes=this.value" placeholder="Instrução de execução (opcional)"></div>`;
+      });
+    } else {
+      html+=`<div style="font-size:.75rem;color:var(--muted);padding:.2rem 0">Sem exercícios. Clique em "+ Exercício" para adicionar.</div>`;
+    }
+    html+='</div>';
+  });
+  c.innerHTML=html;
+}
+
+function addExToPlan(di){
+  _cwPlan.days[di].exercises.push({name:'',sets:'4',reps:'10-12',load:'',rest:'60s',muscle:'',notes:''});
+  renderWorkoutEditor();
+  setTimeout(()=>{
+    const rows=document.querySelectorAll('.ex-row input');
+    if(rows.length)rows[rows.length-6].focus();
+  },50);
+}
+
+function deleteExFromPlan(di,ei){
+  _cwPlan.days[di].exercises.splice(ei,1);
+  renderWorkoutEditor();
+}
+
+function saveWorkoutPlan(){
+  let hasEx=false;
+  _cwPlan.days.forEach(d=>{if(d.exercises&&d.exercises.length)hasEx=true});
+  if(!hasEx){toast('❌ Adicione pelo menos um exercício em algum dia');return}
+  const ss=S.getStudents();const s=ss[curStudent];
+  S.setWorkout(s.id,_cwPlan);
+  S.addActivity({msg:`Treino atualizado: ${s.name}`});
+  toast('✅ Treino salvo com sucesso!');
+  renderCustomWorkout();
+}
+
+// ════════════════════════════════════════
+//  CUSTOM DIET EDITOR
+// ════════════════════════════════════════
+let _cdPlan=null;
+
+function renderCustomDiet(){
+  const c=document.getElementById('nut-view');
+  if(!c||curStudent===null)return;
+  const ss=S.getStudents();const s=ss[curStudent];if(!s)return;
+  const diet=S.getDiet(s.id);
+  if(!diet){
+    c.innerHTML<`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.875rem">
+      <div><div style="font-size:.88rem;font-weight:600">Dieta de <span class="g">${s.name.split(' ')[0]}</span></div><div style="font-size:.72rem;color:var(--muted)">Objetivo: ${s.goal}</div></div>
+      <button class="btn g" onclick="startEditDiet()">✏️ Montar Dieta</button></div>
+      <div class="card"><div class="cb empty-plan"><div class="eico">🥗</div><p>Nenhuma dieta montada ainda.<br>Clique em <strong style="color:var(--gold)">Montar Dieta</strong> para criar o plano alimentar personalizado deste aluno.</p></div></div>`;
+    return;
+  }
+  const mealList=diet.meals.map(m=>`<div class="meal"><div class="mh">${m.time||'—'}</div><div class="mi"><h4>${m.name}</h4><p>${m.foods}</p></div><div class="mk">${m.kcal?m.kcal+' kcal':''}</div></div>`).join('');
+  c.innerHTML=`<div style="display:grid;grid-template-columns:200px 1fr;gap:.875rem">
+    <div>
+      <div class="card" style="margin-bottom:.875rem">
+        <div class="ch"><span class="ct">Macros/Dia</span>${diet.planName?`<span class="bdg bg" style="font-size:.65rem">${diet.planName}</span>`:''}</div>
+        <div class="cb">
+          <div style="text-align:center;margin-bottom:.875rem"><div style="font-family:var(--fh);font-size:1.8rem;font-weight:800;color:var(--gold)">${diet.kcal||'—'}</div><div style="font-size:.7rem;color:var(--muted)">kcal / dia</div></div>
+          <div class="mc" style="margin-bottom:.4rem"><div class="mn">Proteína</div><div class="mv" style="color:#ef9a9a">${diet.protein||'—'}g</div><div class="mw"><div class="mf" style="width:70%;background:#ef9a9a"></div></div></div>
+          <div class="mc" style="margin-bottom:.4rem"><div class="mn">Carboidrato</div><div class="mv" style="color:#ffcc80">${diet.carbs||'—'}g</div><div class="mw"><div class="mf" style="width:80%;background:#ffcc80"></div></div></div>
+          <div class="mc"><div class="mn">Gordura</div><div class="mv" style="color:#a5d6a7">${diet.fat||'—'}g</div><div class="mw"><div class="mf" style="width:40%;background:#a5d6a7"></div></div></div>
+        </div>
+      </div>
+      <button class="btn" style="width:100%;font-size:.78rem" onclick="startEditDiet()">✏️ Editar Dieta</button>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">Plano Alimentar</span></div>
+      <div class="cb">${mealList||'<div style="text-align:center;color:var(--muted);padding:1rem;font-size:.82rem">Nenhuma refeição cadastrada.</div>'}</div>
+    </div>
+  </div>`;
+}
+
+function startEditDiet(){
+  const ss=S.getStudents();const s=ss[curStudent];
+  let diet=S.getDiet(s.id);
+  if(!diet){diet={planName:s.goal||'',kcal:'',protein:'',carbs:'',fat:'',meals:[]};}
+  _cdPlan=JSON.parse(JSON.stringify(diet));
+  renderDietEditor();
+}
+
+function renderDietEditor(){
+  const c=document.getElementById('nut-view');
+  const mealsHtml=_cdPlan.meals.map((m,i)=>`
+    <div class="meal-row">
+      <input value="${m.time||''}" onchange="_cdPlan.meals[${i}].time=this.value" placeholder="07:00">
+      <input value="${m.name||''}" onchange="_cdPlan.meals[${i}].name=this.value" placeholder="Café da Manhã">
+      <input value="${m.foods||''}" onchange="_cdPlan.meals[${i}].foods=this.value" placeholder="4 ovos, 2 fatias pão integral, 1 banana...">
+      <input value="${m.kcal||''}" onchange="_cdPlan.meals[${i}].kcal=this.value" type="number" placeholder="520">
+      <button class="del-btn" onclick="deleteMealFromPlan(${i})">🗑</button>
+    </div>`).join('');
+  c.innerHTML<`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+    <div style="font-family:var(--fh);font-size:.92rem;font-weight:700;color:var(--gold)">✏️ Editor de Dieta Personalizada</div>
+    <div style="display:flex;gap:.5rem"><button class="btn" onclick="renderCustomDiet()">✕ Cancelar</button>
+    <button class="btn g" onclick="saveDietPlan()">💾 Salvar Dieta</button></div></div>
+  <div class="edit-section">
+    <div style="font-size:.8rem;font-weight:600;color:var(--gold);margin-bottom:.875rem;font-family:var(--fh);letter-spacing:.05em">MACROS DHÁRIOS</div>
+    <div class="fr" style="margin-bottom:.875rem">
+      <div class="fg"><label>Nome do Plano</label><input id="dp-name" value="${_cdPlan.planName||''}" onchange="_cdPlan.planName=this.value" placeholder="Ex: Hipertrofia, Cutting, Manutenção..."></div>
+    </div>
+    <div class="macro-row">
+      <div><input class="macro-input" type="number" value="${_cdPlan.kcal||''}" onchange="_cdPlan.kcal=this.value" placeholder="2500"><div class="macro-lbl">Kcal Total</div></div>
+      <div><input class="macro-input" type="number" value="${_cdPlan.protein||''}" onchange="_cdPlan.protein=this.value" placeholder="180"><div class="macro-lbl">Proteína (g)</div></div>
+      <div><input class="macro-input" type="number" value="${_cdPlan.carbs||''}" onchange="_cdPlan.carbs=this.value" placeholder="200"><div class="macro-lbl">Carboidrato (g)</div></div>
+      <div><input class="macro-input" type="number" value="${_cdPlan.fat||''}" onchange="_cdPlan.fat=this.value" placeholder="60"><div class="macro-lbl">Gordura (g)</div></div>
+    </div>
+  </div>
+  <div class="edit-section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <div style="font-size:.8rem;font-weight:600;color:var(--gold);font-family:var(--fh);letter-spacing:.05em">REFEIÇÕES</div>
+      <button class="add-ex-btn" onclick="addMealToPlan()">+ Refeição</button>
+    </div>
+    ${_cdPlan.meals.length?`<div class="meal-row" style="margin-bottom:.2rem">
+      <span style="font-size:.66rem;color:var(--muted);text-align:center">Horário</span>
+      <span style="font-size:.66rem;color:var(--muted);text-align:center">Refeição</span>
+      <span style="font-size:.66rem;color:var(--muted);text-align:center">Alimentos</span>
+      <span style="font-size:.66rem;color:var(--muted);text-align:center">Kcal</span>
+      <span></span></div>`:''}
+    <div id="meals-editor">${mealsHtml||'<div style="font-size:.8rem;color:var(--muted);padding:.5rem 0">Nenhuma refeição. Clique em "+ Refeição" para adicionar.</div>'}</div>
+  </div>`;
+}
+
+function addMealToPlan(){
+  _cdPlan.meals.push({time:'',name:'',foods:'',kcal:''});
+  renderDietEditor();
+  setTimeout(()=>{
+    const rows=document.querySelectorAll('.meal-row input');
+    if(rows.length)rows[rows.length-4].focus();
+  },50);
+}
+
+function deleteMealFromPlan(i){
+  _cdPlan.meals.splice(i,1);
+  renderDietEditor();
+}
+
+function saveDietPlan(){
+  if(!_cdPlan.kcal&&!_cdPlan.meals.length){toast('❌ Adicione as calorias ou pelo menos uma refeição');return}
+  const ss=S.getStudents();const s=ss[curStudent];
+  S.setDiet(s.id,_cdPlan);
+  S.addActivity({msg:`Dieta atualizada: ${s.name}`});
+  toast('✅ Dieta salva com sucesso!');
+  renderCustomDiet();
 }
 
 // ════════════════════════════════════════
