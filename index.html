@@ -68,7 +68,7 @@ input,select,textarea{font-family:var(--fb)}
 #mn{flex:1;overflow-y:auto;background:var(--black)}
 .tb{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:.5rem}
 .tbt{font-family:var(--fh);font-size:1rem;font-weight:700}
-.tas{display:flex;align-items:center;gap:.5rem;flew-wrap:wrap}
+.tas{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:.4rem;font-size:.78rem;cursor:pointer;transition:all .2s}
 .btn:hover{border-color:var(--gold);color:var(--gold)}
 .btn.g{background:linear-gradient(135deg,var(--gold3),var(--gold));color:#000;font-weight:700;border:none}
@@ -158,7 +158,7 @@ input,select,textarea{font-family:var(--fb)}
 /* ─── CALENDAR ─── */
 .wg{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem}
 .dc{background:var(--card2);border-radius:.65rem;padding:.75rem .6rem;min-height:120px}
-.dn{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:center;margin-bottom:.5rem}
+#dn{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:center;margin-bottom:.5rem}
 .dd{font-family:var(--fh);font-size:1rem;font-weight:700;text-align:center;margin-bottom:.5rem}
 .dd.td{color:var(--gold)}
 .wp{background:rgba(201,168,76,.1);border-left:2px solid var(--gold);padding:.3rem .4rem;border-radius:0 .25rem .25rem 0;font-size:.65rem;margin-bottom:.3rem;color:var(--white)}
@@ -723,7 +723,7 @@ input,select,textarea{font-family:var(--fb)}
               <div style="font-size:.72rem;color:#64b5f6;font-weight:700;letter-spacing:.08em;margin-bottom:.4rem">COMO FUNCIONA</div>
               <div style="font-size:.82rem;color:var(--white);line-height:1.8">
                 1. Você cria um Google Form e compartilha o link com seus alunos via WhatsApp<br>
-                2. O aluno preenche — Os dados chegam automaticamente no seu Google Sheets<br>
+                2. O aluno preenche — os dados chegam automaticamente no seu Google Sheets<br>
                 3. Você clica em "Buscar Cadastros" aqui e os alunos novos aparecem para importar
               </div>
             </div>
@@ -896,7 +896,7 @@ function tab(btn,id){
   if(id==='t-evo')setTimeout(()=>initStudentCharts(),120);
   if(id==='t-med')initMeasureForm();
   if(id==='t-treino')renderCustomWorkout();
-  if(id==='t-nut')renderCustomDiet();
+  if(id==='t-nut')setTimeout(renderCustomDiet,0);
 }
 
 // ════════════════════════════════════════
@@ -1221,7 +1221,7 @@ function initStudentCharts(){
   const s=ss[curStudent];
   if(!s) return;
   const ms=S.getMeasures(curStudent).reverse();
-  const labels=ms.length?ms.map(m=>m.date):['Início','Atual'];
+  const labels=ms.length?ms.map(m=>m.date):['Inϭcio','Atual'];
   const weights=ms.length?ms.map(m=>parseFloat(m.weight)||0):[parseFloat(s.weight)||0,parseFloat(s.weight)||0];
   const fats=ms.length?ms.map(m=>parseFloat(m.fat)||0):[parseFloat(s.fat)||0,parseFloat(s.fat)||0];
   mkChart('c-weight','line',{labels,datasets:[{label:'Peso (kg)',data:weights,borderColor:'#C9A84C',backgroundColor:'rgba(201,168,76,.07)',tension:.4,fill:true,pointBackgroundColor:'#C9A84C',pointRadius:4}]});
@@ -1436,7 +1436,7 @@ function importSelected(){
   S.set('imported_emails',imported);
   S.addActivity({msg:`${count} aluno(s) importado(s) via Google Forms`});
   document.getElementById('import-preview').style.display='none';
-  document.getElementById('gcfg-status').textContent=`✅ ${count} aluno(s) importado(s) com sucesso!`;
+  document.getElementById('gcfg-status').textContent=`"�� ${count} aluno(s) importado(s) com sucesso!`;
   window._pendingImport=[];
   updateBadge();
   toast(`✅ ${count} aluno(s) importado(s)!`);
@@ -1580,18 +1580,20 @@ let _cdPlan=null;
 
 function renderCustomDiet(){
   const c=document.getElementById('nut-view');
-  if(!c||curStudent===null)return;
-  const ss=S.getStudents();const s=ss[curStudent];if(!s)return;
+  if(!c)return;
+  const ss=S.getStudents();
+  const s=(curStudent!==null&&curStudent!==undefined)?ss[curStudent]:null;
+  if(!s){c.innerHTML='<div class="card"><div class="cb empty-plan"><div class="eico">🥗</div><p>Selecione um aluno para ver o plano alimentar.</p></div></div>';return;}
   const diet=S.getDiet(s.id);
   if(!diet){
-    c.innerHTML<`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.875rem">
+    c.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.875rem">
       <div><div style="font-size:.88rem;font-weight:600">Dieta de <span class="g">${s.name.split(' ')[0]}</span></div><div style="font-size:.72rem;color:var(--muted)">Objetivo: ${s.goal}</div></div>
       <button class="btn g" onclick="startEditDiet()">✏️ Montar Dieta</button></div>
       <div class="card"><div class="cb empty-plan"><div class="eico">🥗</div><p>Nenhuma dieta montada ainda.<br>Clique em <strong style="color:var(--gold)">Montar Dieta</strong> para criar o plano alimentar personalizado deste aluno.</p></div></div>`;
     return;
   }
   const mealList=diet.meals.map(m=>`<div class="meal"><div class="mh">${m.time||'—'}</div><div class="mi"><h4>${m.name}</h4><p>${m.foods}</p></div><div class="mk">${m.kcal?m.kcal+' kcal':''}</div></div>`).join('');
-  c.innerHTML=`<div style="display:grid;grid-template-columns:200px 1fr;gap:.875rem">
+  c.innerHTML<`<div style="display:grid;grid-template-columns:200px 1fr;gap:.875rem">
     <div>
       <div class="card" style="margin-bottom:.875rem">
         <div class="ch"><span class="ct">Macros/Dia</span>${diet.planName?`<span class="bdg bg" style="font-size:.65rem">${diet.planName}</span>`:''}</div>
@@ -1629,12 +1631,12 @@ function renderDietEditor(){
       <input value="${m.kcal||''}" onchange="_cdPlan.meals[${i}].kcal=this.value" type="number" placeholder="520">
       <button class="del-btn" onclick="deleteMealFromPlan(${i})">🗑</button>
     </div>`).join('');
-  c.innerHTML<`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+  c.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
     <div style="font-family:var(--fh);font-size:.92rem;font-weight:700;color:var(--gold)">✏️ Editor de Dieta Personalizada</div>
     <div style="display:flex;gap:.5rem"><button class="btn" onclick="renderCustomDiet()">✕ Cancelar</button>
     <button class="btn g" onclick="saveDietPlan()">💾 Salvar Dieta</button></div></div>
   <div class="edit-section">
-    <div style="font-size:.8rem;font-weight:600;color:var(--gold);margin-bottom:.875rem;font-family:var(--fh);letter-spacing:.05em">MACROS DHÁRIOS</div>
+    <div style="font-size:.8rem;font-weight:600;color:var(--gold);margin-bottom:.875rem;font-family:var(--fh);letter-spacing:.05em">MACROS DIÁRIOS</div>
     <div class="fr" style="margin-bottom:.875rem">
       <div class="fg"><label>Nome do Plano</label><input id="dp-name" value="${_cdPlan.planName||''}" onchange="_cdPlan.planName=this.value" placeholder="Ex: Hipertrofia, Cutting, Manutenção..."></div>
     </div>
